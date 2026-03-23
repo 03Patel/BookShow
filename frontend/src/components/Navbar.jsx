@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Login from './Login';
+import { useReducer } from "react";
+import { AuthReducer, initialState } from "../redux/AuthReducer";
 
 function Navbar() {
 
 
     const [theme, setTheme] = useState(localStorage.getItem("theme") ? localStorage.getItem("theme") : "light")
+    const [state, dispatch] = useReducer(AuthReducer, initialState);
+    const navigate = useNavigate();
+
+    const token = localStorage.getItem("token");
+    const isAuthenticated = !!token;
 
     useEffect(() => {
         const element = document.documentElement;
@@ -39,6 +46,15 @@ function Navbar() {
         return () => window.removeEventListener("scroll", handleScroll)
     }, [])
 
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        dispatch({ type: "LOGOUT" })
+        navigate("/")
+    }
+
+
+
+
     return (
         <>
             <div className={`max-w-screen-2xl container mx-auto px-4 sm:px-6 md:px-20  dark:bg-slate-900 dark:text-white fixed top-0 left-0 right-0 z-50
@@ -59,7 +75,7 @@ function Navbar() {
 
                             <ul
                                 tabIndex={0}
-                                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-white rounded-box w-52">
+                                className="menu menu-xl dropdown-content dark:text-white dark:bg-gray-900 mt-3 z-[1] p-2 shadow bg-white rounded-box w-52 h-60 border-2">
                                 {items}
                             </ul>
                         </div>
@@ -127,9 +143,19 @@ function Navbar() {
 
                         {/* Login Button */}
 
-                        <a onClick={() => document.getElementById("my_modal_3").showModal()} className="btn btn-sm sm:btn-md">
-                            Login
-                        </a>
+                        {isAuthenticated ? (
+                            <button className='bg-red-500 btn hover:bg-red-600 text-white cursor-pointer'
+                                onClick={handleLogout}
+                            >
+                                Logout
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => document.getElementById("my_modal_3").showModal()}
+                                className="btn btn-sm sm:btn-md">
+                                Login
+                            </button>
+                        )}
                         <Login />
 
                     </div>

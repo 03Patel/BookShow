@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, User, AwardIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import API from '../api';
 
 function Signup() {
 
@@ -18,18 +19,31 @@ function Signup() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (form.password !== form.confirmPassword) {
-            alert("Passwords do not match");
-            return;
+        try {
+            if (form.password !== form.confirmPassword) {
+                alert("Passwords do not match");
+                return;
+            }
+
+            const res = await API.post("/auth/signup", form);
+
+
+
+            // success message
+            alert(res.data.message);
+            document.getElementById('my_modal_3').showModal()
+
+
+        } catch (error) {
+            console.log(error);
+            alert(error.response?.data?.message || "Signup failed");
         }
-
-
-
-        console.log(form); // later connect backend
     };
+
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-900 dark:text-white px-4 text-gray-800">

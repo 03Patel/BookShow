@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock, FolderMinus } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import API from '../api';
+import { useReducer } from "react";
+import { AuthReducer, initialState } from "../redux/AuthReducer";
+
 
 function Login() {
-
+    const navigate = useNavigate();
+    const [state, dispatch] = useReducer(AuthReducer, initialState);
     const [show, setShow] = useState(false);
 
     const [form, setform] = useState({
@@ -16,7 +21,27 @@ function Login() {
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(form)
+        try {
+            const res = await API.post("/auth/login", form);
+
+
+
+            localStorage.setItem("token", res.data.token)
+            navigate("/")
+            dispatch({
+                type: "LOGIN",
+                payload: {
+                    user: res.data.user,
+                    token: res.data.token
+                }
+            })
+            document.getElementById('my_modal_3').close()
+
+        }
+        catch (error) {
+            alert(error.response?.data?.message || "Login failed");
+        }
+
     }
 
 
@@ -32,7 +57,7 @@ function Login() {
 
                     {/* Close Button */}
                     <Link to="/" method="dialog">
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-3 top-3">✕</button>
+                        <button onClick={() => document.getElementById('my_modal_3').close()} className="btn btn-sm btn-circle btn-ghost absolute right-3 top-3">✕</button>
                     </Link>
 
                     <h3 className="font-bold text-2xl text-center">Login</h3>
