@@ -1,13 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import list from "./list.json"
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
 import Card from './Card';
+import API from '../api';
 
 function FreeBook() {
 
     const [screenWidth, setScreenWidth] = useState(0);
+    const [book, setBook] = useState([]);
 
     useEffect(() => {
         const updateWidth = () => {
@@ -20,9 +22,19 @@ function FreeBook() {
         return () => window.removeEventListener("resize", updateWidth);
     }, []);
 
-    const filterData = useMemo(() => {
-        return list.filter((data) => data.free === true);
-    }, []);
+    const getBook = async () => {
+        try {
+            const book = await API.get("/book");
+            setBook(book.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    useEffect(() => {
+        getBook();
+    })
 
     const settings = {
         infinite: true,
@@ -46,7 +58,7 @@ function FreeBook() {
             </div>
 
             <Slider key={screenWidth} {...settings}>
-                {filterData.map((item) => (
+                {book.map((item) => (
                     <Card item={item} key={item.id} />
                 ))}
             </Slider>

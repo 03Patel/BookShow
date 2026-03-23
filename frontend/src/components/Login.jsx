@@ -2,13 +2,12 @@ import React, { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock, FolderMinus } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import API from '../api';
-import { useReducer } from "react";
-import { AuthReducer, initialState } from "../redux/AuthReducer";
+
 
 
 function Login() {
     const navigate = useNavigate();
-    const [state, dispatch] = useReducer(AuthReducer, initialState);
+
     const [show, setShow] = useState(false);
 
     const [form, setform] = useState({
@@ -26,15 +25,11 @@ function Login() {
 
 
 
-            localStorage.setItem("token", res.data.token)
+            // localStorage.setItem("token", res.data.token)
+            localStorage.setItem("user", JSON.stringify(res.data.user))
             navigate("/")
-            dispatch({
-                type: "LOGIN",
-                payload: {
-                    user: res.data.user,
-                    token: res.data.token
-                }
-            })
+            window.location.reload()
+
             document.getElementById('my_modal_3').close()
 
         }

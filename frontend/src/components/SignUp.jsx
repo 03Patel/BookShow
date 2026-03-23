@@ -30,7 +30,7 @@ function Signup() {
 
             const res = await API.post("/auth/signup", form);
 
-
+            localStorage.setItem("user", JSON.stringify(res.data.user))
 
             // success message
             alert(res.data.message);

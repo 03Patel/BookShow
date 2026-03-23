@@ -1,25 +1,20 @@
-export const AuthReducer = (state, action) => {
-    switch (action.type) {
-        case "LOGIN":
-            return {
-                ...state,
-                user: action.payload.user,
-                token: action.payload.token,
-                isAuthenticated: true
-            }
-        case "LOGOUT":
-            return {
-                ...state,
-                user: null,
-                token: null,
-                isAuthenticated: false
-            }
-        default:
-            return state;
-    }
-}
-export const initialState = {
-    user: null,
-    token: null,
-    isAuthenticated: false
+import React, { createContext, useContext, useState } from 'react';
+
+export const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+    const initialState = localStorage.getItem("user");
+
+    const [authUser, setAuthUser] = useState(
+        initialState ? JSON.parse(initialState) : null
+    );
+
+    return (
+        <AuthContext.Provider value={[authUser, setAuthUser]}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
+
+// custom hook
+export const useAuth = () => useContext(AuthContext);

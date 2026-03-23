@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Login from './Login';
-import { useReducer } from "react";
-import { AuthReducer, initialState } from "../redux/AuthReducer";
+import { useAuth } from '../redux/AuthReducer';
 
 function Navbar() {
 
 
     const [theme, setTheme] = useState(localStorage.getItem("theme") ? localStorage.getItem("theme") : "light")
-    const [state, dispatch] = useReducer(AuthReducer, initialState);
+
+    const [authUser, setAuthUser] = useAuth();
+
+
     const navigate = useNavigate();
 
-    const token = localStorage.getItem("token");
-    const isAuthenticated = !!token;
 
     useEffect(() => {
         const element = document.documentElement;
@@ -47,8 +47,15 @@ function Navbar() {
     }, [])
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        dispatch({ type: "LOGOUT" })
+        try {
+            setAuthUser(null)
+            localStorage.removeItem("user")
+
+        } catch (error) {
+            console.log(error)
+
+        }
+
         navigate("/")
     }
 
@@ -143,10 +150,12 @@ function Navbar() {
 
                         {/* Login Button */}
 
-                        {isAuthenticated ? (
-                            <button className='bg-red-500 btn hover:bg-red-600 text-white cursor-pointer'
+                        {authUser ? (
+                            <button
                                 onClick={handleLogout}
+                                className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
                             >
+
                                 Logout
                             </button>
                         ) : (

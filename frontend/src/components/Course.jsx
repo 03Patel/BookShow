@@ -1,5 +1,4 @@
 import React from 'react'
-import list from "../components/list.json"
 import Card from './Card';
 import Footer from './Footer';
 import { Link } from "react-router-dom";

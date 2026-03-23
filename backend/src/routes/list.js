@@ -1,4 +1,4 @@
-[
+const data = [
     {
         "id": 1,
         "name": "James Clear",
@@ -90,3 +90,4 @@
         "image": "https://images.unsplash.com/photo-1497633762265-9d179a990aa6"
     }
 ]
+export default data;
