@@ -1,5 +1,4 @@
 import React from 'react'
-import image from "../../public/image.png"
 
 function Card({ item }) {
     return (
@@ -8,7 +7,7 @@ function Card({ item }) {
             <div className="w-full dark:bg-slate-900 dark:text-white dark:border sm:max-w-sm md:max-w-md bg-white rounded-xl shadow-md hover:shadow-xl hover:scale-105 transition duration-300 overflow-hidden group">
 
                 {/* IMAGE */}
-                <div className="w-full h-48 sm:h-56 overflow-hidden">
+                <div className="w-full overflow-hidden aspect-[3/2]">
                     <img
                         src={item.image}
                         alt={item.name}
@@ -17,7 +16,7 @@ function Card({ item }) {
                 </div>
 
                 {/* BODY */}
-                <div className="p-4  dark:bg-slate-900 dark:text-white sm:p-5 space-y-3">
+                <div className="p-4 sm:p-5 space-y-3">
 
                     {/* TITLE + BADGE */}
                     <div className="flex items-center justify-between">
@@ -32,17 +31,13 @@ function Card({ item }) {
                     </div>
 
                     {/* DESCRIPTION */}
-                    <div className='flex justify-between dark:bg-slate-900 dark:text-white text-xs sm:text-sm text-gray-600'>
-                        <p className="text-left w-[65%]">
-                            {item.title}
-                        </p>
-                        <p className="text-right w-[30%]">
-                            {item.category}
-                        </p>
+                    <div className='flex justify-between text-xs sm:text-sm text-gray-600 flex-wrap gap-2'>
+                        <p className="flex-1 truncate">{item.title}</p>
+                        <p className="flex-none">{item.category}</p>
                     </div>
 
                     {/* PRICE + BUTTON */}
-                    <div className="flex items-center dark:bg-slate-900 dark:text-white justify-between pt-2">
+                    <div className="flex flex-wrap items-center justify-between pt-2 gap-2">
                         <span className="border dark:bg-slate-900 dark:text-white text-gray-700 text-xs sm:text-sm px-3 py-1 rounded-md font-medium">
                             $ {item.price}
                         </span>
@@ -58,4 +53,4 @@ function Card({ item }) {
     )
 }
 
-export default Card
+export default Card;

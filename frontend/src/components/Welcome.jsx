@@ -1,38 +1,33 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
-export default function WelcomeTyping({ part1, part2 }) {
-    const [typedText, setTypedText] = useState("");
-    const [typedPart2, setTypedPart2] = useState("");
+export default function WelcomeTyping({ part1 = "", part2 = "", speed = 100, pause = 2000 }) {
     const [index, setIndex] = useState(0);
 
+    // Combine parts once
+    const fullText = useMemo(() => part1 + part2, [part1, part2]);
+
     useEffect(() => {
-        const fullText = part1 + part2;
+        let timeout;
+
         if (index < fullText.length) {
-            const timeout = setTimeout(() => {
-                if (index < part1.length) {
-                    setTypedText(fullText.slice(0, index + 1));
-                } else {
-                    setTypedPart2(fullText.slice(part1.length, index + 1));
-                }
-                setIndex(index + 1);
-            }, 100);
-            return () => clearTimeout(timeout);
+            timeout = setTimeout(() => setIndex(index + 1), speed);
         } else {
-            const resetTimeout = setTimeout(() => {
-                setTypedText("");
-                setTypedPart2("");
-                setIndex(0);
-            }, 2000);
-            return () => clearTimeout(resetTimeout);
+            // Reset after pause
+            timeout = setTimeout(() => setIndex(0), pause);
         }
-    }, [index, part1, part2]);
+
+        return () => clearTimeout(timeout);
+    }, [index, fullText, speed, pause]);
+
+    // Split typed text for styling
+    const typedPart1 = fullText.slice(0, Math.min(index, part1.length));
+    const typedPart2 = fullText.slice(part1.length, index);
 
     return (
         <h2 className="text-2xl md:text-3xl font-semibold">
-            <span>{typedText}</span>
+            <span>{typedPart1}</span>
             <br />
-            <span className="text-pink-500 ">{typedPart2}</span>
-
+            <span className="text-pink-500">{typedPart2}</span>
         </h2>
     );
 }

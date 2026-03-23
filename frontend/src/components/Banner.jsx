@@ -7,23 +7,22 @@ function Banner() {
     const [authUser, setAuthUser] = useAuth();
     return (
         <>
-            <div className='max-w-screen-2xl container mx-auto px-4 sm:px-6 md:px-20 flex flex-col dark:bg-slate-900 dark:text-white md:flex-row text-gray-800'>
+            <div className='max-w-screen-2xl container mx-auto px-4 sm:px-6 md:px-12 lg:px-20 flex flex-col md:flex-row items-center md:items-start dark:bg-slate-900 dark:text-white text-gray-800'>
 
                 {/* Text Section */}
-                <div className='w-full md:w-1/2 order-2 md:order-1 mt-10 md:mt-32'>
+                <div className='w-full md:w-1/2 order-2 md:order-1 mt-10 md:mt-32 text-center md:text-left'>
                     <div className='space-y-6 md:space-y-12'>
 
-                        {authUser ? <WelcomeTyping textMessage={`Welcome back, ${authUser.name} 👋`} /> : ""}
+                        {authUser && <WelcomeTyping textMessage={`Welcome back, ${authUser.name} 👋`} />}
 
-                        <h1 className='text-2xl text-center sm:text-3xl md:text-4xl font-bold leading-snug'>
+                        <h1 className='text-2xl sm:text-3xl md:text-4xl font-bold leading-snug'>
                             <WelcomeTyping
                                 part1="Hello, Welcome here to learn something "
                                 part2="new everyday"
                             />
-
                         </h1>
 
-                        <p className='text-sm  sm:text-base md:text-lg'>
+                        <p className='text-sm sm:text-base md:text-lg'>
                             Step into a universe where every page unlocks a new world, every story shapes a new perspective, and every book becomes a journey you’ll never forget.
                         </p>
 
@@ -56,7 +55,7 @@ function Banner() {
                     <img
                         src={banner}
                         alt="banner"
-                        className='w-full max-w-md md:max-w-full h-auto object-contain rounded-md'
+                        className='w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-full h-auto object-contain rounded-md'
                     />
                 </div>
             </div>
@@ -67,4 +66,4 @@ function Banner() {
     )
 }
 
-export default Banner
+export default Banner;

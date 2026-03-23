@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
-
+import React, { useEffect, useState } from 'react'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
@@ -8,34 +7,30 @@ import API from '../api';
 
 function FreeBook() {
 
-    const [screenWidth, setScreenWidth] = useState(0);
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [book, setBook] = useState([]);
 
+    // Update screen width
     useEffect(() => {
-        const updateWidth = () => {
-            setScreenWidth(window.innerWidth);
-        };
-
-        updateWidth(); // run on load
+        const updateWidth = () => setScreenWidth(window.innerWidth);
         window.addEventListener("resize", updateWidth);
-
         return () => window.removeEventListener("resize", updateWidth);
     }, []);
 
-    const getBook = async () => {
-        try {
-            const book = await API.get("/book");
-            setBook(book.data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-
+    // Fetch books only once on mount
     useEffect(() => {
+        const getBook = async () => {
+            try {
+                const res = await API.get("/book");
+                setBook(res.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
         getBook();
-    })
+    }, []); // empty dependency array = run once
 
+    // Slider settings
     const settings = {
         infinite: true,
         slidesToShow: screenWidth < 768 ? 1 : 3,
@@ -49,7 +44,6 @@ function FreeBook() {
 
     return (
         <div className='max-w-screen-2xl dark:bg-slate-900 dark:text-white container mx-auto text-gray-800 md:px-20 px-4'>
-
             <div>
                 <h1 className='font-semibold text-xl p-2'>Free Offer Books</h1>
                 <p className='text-gray-500 p-2'>
@@ -57,12 +51,11 @@ function FreeBook() {
                 </p>
             </div>
 
-            <Slider key={screenWidth} {...settings}>
+            <Slider {...settings}>
                 {book.map((item) => (
                     <Card item={item} key={item.id} />
                 ))}
             </Slider>
-
         </div>
     )
 }
