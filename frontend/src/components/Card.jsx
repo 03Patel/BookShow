@@ -33,7 +33,7 @@ function Card({ item }) {
 
                     {/* DESCRIPTION */}
                     <div className='flex justify-between dark:bg-slate-900 dark:text-white text-xs sm:text-sm text-gray-600'>
-                        <p className="line-clamp-2 w-[65%]">
+                        <p className="text-left w-[65%]">
                             {item.title}
                         </p>
                         <p className="text-right w-[30%]">
