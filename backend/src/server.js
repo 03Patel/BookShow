@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import authRoute from "./routes/auth.js"
 import cors from "cors"
 import bookRoute from "./routes/book.js"
+import AuthProduct from "./routes/products.js"
 
 dotenv.config({ path: "../.env" });
 
@@ -16,7 +17,7 @@ app.use(express.json());
 
 
 // DB connection
-
+app.use("/api/products", AuthProduct)
 app.use("/api/book", bookRoute)
 app.use("/api/auth", authRoute)
 

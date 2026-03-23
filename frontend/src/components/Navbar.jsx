@@ -82,7 +82,7 @@ function Navbar() {
 
                             <ul
                                 tabIndex={0}
-                                className="menu menu-xl dropdown-content dark:text-white dark:bg-gray-900 mt-3 z-[1] p-2 shadow bg-white rounded-box w-52 h-60 border-2">
+                                className="menu menu-sm dropdown-content dark:text-white dark:bg-gray-900 mt-3 z-[1] p-2 shadow bg-white rounded-box w-52 h-60 border-2">
                                 {items}
                             </ul>
                         </div>

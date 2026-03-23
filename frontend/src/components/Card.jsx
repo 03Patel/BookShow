@@ -44,7 +44,7 @@ function Card({ item }) {
                     {/* PRICE + BUTTON */}
                     <div className="flex items-center dark:bg-slate-900 dark:text-white justify-between pt-2">
                         <span className="border dark:bg-slate-900 dark:text-white text-gray-700 text-xs sm:text-sm px-3 py-1 rounded-md font-medium">
-                            ₹ {item.price}
+                            $ {item.price}
                         </span>
 
                         <button className="text-xs sm:text-sm px-3 py-1 rounded-full border-2 border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white transition duration-300">

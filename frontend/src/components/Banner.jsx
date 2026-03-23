@@ -1,7 +1,10 @@
 import React from 'react'
 import banner from "../../public/banner.png"
+import { useAuth } from '../redux/AuthReducer'
+import WelcomeTyping from './Welcome';
 
 function Banner() {
+    const [authUser, setAuthUser] = useAuth();
     return (
         <>
             <div className='max-w-screen-2xl container mx-auto px-4 sm:px-6 md:px-20 flex flex-col dark:bg-slate-900 dark:text-white md:flex-row text-gray-800'>
@@ -10,12 +13,17 @@ function Banner() {
                 <div className='w-full md:w-1/2 order-2 md:order-1 mt-10 md:mt-32'>
                     <div className='space-y-6 md:space-y-12'>
 
-                        <h1 className='text-2xl sm:text-3xl md:text-4xl font-bold leading-snug'>
-                            Hello, Welcomes here to learn something{" "}
-                            <span className='text-pink-500'>new everyday</span>
+                        {authUser ? <WelcomeTyping textMessage={`Welcome back, ${authUser.name} 👋`} /> : ""}
+
+                        <h1 className='text-2xl text-center sm:text-3xl md:text-4xl font-bold leading-snug'>
+                            <WelcomeTyping
+                                part1="Hello, Welcome here to learn something "
+                                part2="new everyday"
+                            />
+
                         </h1>
 
-                        <p className='text-sm sm:text-base md:text-lg'>
+                        <p className='text-sm  sm:text-base md:text-lg'>
                             Step into a universe where every page unlocks a new world, every story shapes a new perspective, and every book becomes a journey you’ll never forget.
                         </p>
 

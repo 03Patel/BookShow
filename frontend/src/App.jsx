@@ -4,6 +4,8 @@ import Navbar from "./components/Navbar";
 import './index.css'
 import Course from "./components/Course";
 import SignUp from "./components/SignUp";
+import ContactForm from "./components/Contact";
+import AboutSection from "./components/About";
 
 
 function App() {
@@ -15,6 +17,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/course" element={<Course />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/contact" element={<ContactForm />} />
+        <Route path="/about" element={<AboutSection />} />
 
 
       </Routes>
