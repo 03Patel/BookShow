@@ -45,9 +45,11 @@ function Banner() {
                         </div>
                     </div>
 
-                    <button className="w-full sm:w-auto px-6 mt-6 py-2 bg-pink-500 text-white rounded-md hover:bg-purple-700 transition duration-200">
-                        Get Started
-                    </button>
+                    <Link to="signup">
+                        <button className="w-full sm:w-auto px-6 mt-6 py-2 bg-pink-500 text-white rounded-md hover:bg-purple-700 transition duration-200">
+                            Get Started
+                        </button>
+                    </Link>
                 </div>
 
                 {/* Image Section */}
