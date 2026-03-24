@@ -1,21 +1,23 @@
-import React from 'react'
-import { useAuth } from '../redux/AuthReducer';
-import toast from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom';
-import BookReceipt from './BookRec';
+import React, { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Card({ item }) {
 
     const navigate = useNavigate();
 
-    const handleBuy = () => {
-
+    // ✅ memoized handler
+    const handleBuy = useCallback(() => {
         navigate(`/Details/${item._id}`, {
             state: {
                 isFree: item.free
             }
         });
-    };
+    }, [navigate, item]);
+
+    // ✅ memoized badge class
+    const badgeClass = useMemo(() => {
+        return item.free ? "bg-green-500" : "bg-purple-600";
+    }, [item.free]);
 
     return (
         <div className='mt-6 sm:mt-10 px-2 sm:px-3'>
@@ -27,6 +29,13 @@ function Card({ item }) {
                     <img
                         src={item.image}
                         alt={item.name}
+                        srcSet={`
+                           ${item.image}?w=300 300w,
+                           ${item.image}?w=600 600w,
+                           ${item.image}?w=900 900w
+                        `}
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        loading="lazy"  // ✅ important
                         className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                     />
                 </div>
@@ -40,8 +49,7 @@ function Card({ item }) {
                             {item.name}
                         </h2>
 
-                        <span className={`text-xs px-2 py-1 rounded-md text-white 
-                            ${item.free ? "bg-green-500" : "bg-purple-600"}`}>
+                        <span className={`text-xs px-2 py-1 rounded-md text-white ${badgeClass}`}>
                             {item.free ? "Free" : "Paid"}
                         </span>
                     </div>
@@ -57,7 +65,13 @@ function Card({ item }) {
                         <span className="border dark:bg-slate-900 dark:text-white text-gray-700 text-xs sm:text-sm px-3 py-1 rounded-md font-medium">
                             $ {item.price}
                         </span>
-                        <button onClick={handleBuy} className="text-xs sm:text-sm px-3 py-1 rounded-full border-2 border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white transition duration-300">Buy Now</button>
+
+                        <button
+                            onClick={handleBuy}
+                            className="text-xs sm:text-sm px-3 py-1 rounded-full border-2 border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white transition duration-300"
+                        >
+                            Buy Now
+                        </button>
                     </div>
 
                 </div>
@@ -66,4 +80,5 @@ function Card({ item }) {
     )
 }
 
-export default Card;
+// ✅ most important
+export default React.memo(Card);

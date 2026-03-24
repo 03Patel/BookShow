@@ -11,6 +11,7 @@ function Checkout() {
     const { isFree } = location.state || {}
 
     const [book, setBook] = useState(null)
+    const [loading, setLoading] = useState(true)
     const [authUser] = useAuth()
 
     const [form, setForm] = useState({
@@ -23,23 +24,19 @@ function Checkout() {
     useEffect(() => {
         const fetchBook = async () => {
             try {
-                let res;
-
-                if (!authUser) {
-                    res = await API.get(`/book/user/${id}`)
-                } else {
-                    res = await API.get(`/products/user/${id}`)
-                }
-
+                setLoading(true)
+                const endpoint = authUser ? `/products/user/${id}` : `/book/user/${id}`
+                const res = await API.get(endpoint)
                 setBook(res.data)
-
             } catch (error) {
                 toast.error("Failed to load product")
+            } finally {
+                setLoading(false)
             }
         }
 
         if (id) fetchBook()
-    }, [id, isFree])
+    }, [id, authUser])
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value })
@@ -69,27 +66,35 @@ function Checkout() {
         })
     }
 
-    if (!book) {
+    if (loading) {
         return (
-            <div className="min-h-screen flex justify-center items-center">
-                <p>Loading...</p>
+            <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-slate-900 text-gray-800 dark:text-white">
+                <p className="text-lg font-medium">Loading checkout...</p>
             </div>
         )
     }
 
-    const amount = book.price + 100;
+    if (!book) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-slate-900 text-gray-800 dark:text-white">
+                <div className="text-center">
+                    <h2 className="text-xl font-semibold mb-2">Book not found</h2>
+                    <Link to="/" className="text-pink-500 hover:underline">Go back</Link>
+                </div>
+            </div>
+        )
+    }
 
     return (
-        <div className="min-h-screen dark:bg-slate-900 dark:text-white text-gray-800 bg-gray-100 py-10 px-4 flex justify-center">
-
-            <div className="w-full mt-20 dark:bg-slate-900 dark:text-white max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="min-h-screen bg-gray-100 dark:bg-slate-900 dark:text-white text-gray-800 py-10 px-4 flex justify-center">
+            <div className="w-full max-w-5xl mt-20 grid grid-cols-1 md:grid-cols-2 gap-6">
 
                 {/* LEFT - FORM */}
                 <form
                     onSubmit={handleSubmit}
-                    className="bg-white p-6 rounded-lg dark:bg-slate-900 dark:text-white shadow-sm border space-y-4"
+                    className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border space-y-4"
                 >
-                    <h2 className="text-xl font-semibold mb-2">Checkout</h2>
+                    <h2 className="text-xl font-semibold mb-4">Checkout</h2>
 
                     <input
                         type="text"
@@ -97,7 +102,8 @@ function Checkout() {
                         placeholder="Full Name"
                         value={form.name}
                         onChange={handleChange}
-                        className="w-full border p-2 rounded"
+                        className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        required
                     />
 
                     <input
@@ -106,7 +112,8 @@ function Checkout() {
                         placeholder="Email"
                         value={form.email}
                         onChange={handleChange}
-                        className="w-full border p-2 rounded"
+                        className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        required
                     />
 
                     <input
@@ -115,7 +122,8 @@ function Checkout() {
                         placeholder="Phone Number"
                         value={form.phone}
                         onChange={handleChange}
-                        className="w-full border p-2 rounded"
+                        className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        required
                     />
 
                     <textarea
@@ -123,26 +131,27 @@ function Checkout() {
                         placeholder="Address"
                         value={form.address}
                         onChange={handleChange}
-                        className="w-full border p-2 rounded"
+                        className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        required
                     />
 
                     <button
                         type="submit"
-                        className="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600"
+                        className="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600 transition"
                     >
                         Proceed to Payment
                     </button>
+
                     <Link
                         to={`/Details/${id}`}
-                        className="text-sm text-gray-600 ml-30 md:ml-50 hover:text-black"
+                        className="inline-block mt-2 text-sm text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white"
                     >
                         ← Back
                     </Link>
                 </form>
 
                 {/* RIGHT - ORDER SUMMARY */}
-                <div className="bg-white p-6 dark:bg-slate-900 dark:text-white rounded-lg shadow-sm border">
-
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border">
                     <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
 
                     <div className="flex gap-4">
@@ -150,17 +159,12 @@ function Checkout() {
                             src={book.image}
                             alt={book.name}
                             className="w-24 h-24 object-cover rounded"
+                            loading="lazy"
                         />
-
                         <div>
                             <p className="font-medium">{book.name}</p>
-                            <p className="text-sm text-gray-500">{book.category}</p>
-
-
-
-                            <p className="text-lg font-semibold mt-2">
-                                ${book.price}
-                            </p>
+                            <p className="text-sm text-gray-500 dark:text-gray-300">{book.category}</p>
+                            <p className="text-lg font-semibold mt-2">${book.price}</p>
                         </div>
                     </div>
 
@@ -168,7 +172,6 @@ function Checkout() {
                         <span>Total</span>
                         <span>${book.price}</span>
                     </div>
-
                 </div>
             </div>
         </div>

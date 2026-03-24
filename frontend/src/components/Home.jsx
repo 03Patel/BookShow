@@ -1,19 +1,23 @@
-import React from 'react'
-import Banner from './Banner'
-import Footer from './Footer'
-import FreeBook from './FreeBook'
+import React, { Suspense } from 'react';
 
+const Banner = React.lazy(() => import('./Banner'));
+const FreeBook = React.lazy(() => import('./FreeBook'));
+const Footer = React.lazy(() => import('./Footer'));
 
 function Home() {
     return (
-        <div className='h-full w-full bg-white dark:bg-slate-900 dark:text-white'>
-            <Banner />
-            <FreeBook />
-            <br /><br />
-            <Footer />
+        <div className='min-h-screen w-full bg-white dark:bg-slate-900 dark:text-white'>
+
+            <Suspense fallback={<div>Loading...</div>}>
+                <Banner />
+                <FreeBook />
+                <div className="mt-10">
+                    <Footer />
+                </div>
+            </Suspense>
 
         </div>
     )
 }
 
-export default Home
+export default React.memo(Home);

@@ -1,88 +1,91 @@
-import React, { useState } from 'react'
-import banner from "../../public/banner.png"
+import React, { useState, useCallback } from 'react'
+import banner from "../../public/banner.webp"
 import { useAuth } from '../redux/AuthReducer'
 import WelcomeTyping from './Welcome';
-import { Link, useNavigate, useSearchParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import toast from 'react-hot-toast';
 
 function Banner() {
-    const [authUser, setAuthUser] = useAuth();
+    const [authUser] = useAuth();
     const [email, setEmail] = useState("");
-    const navigator = useNavigate()
+    const navigate = useNavigate();
 
-    const handleClick = () => {
-        if (email) {
-            navigator("/signup", { state: { email } })
+    // ✅ optimized handler
+    const handleClick = useCallback(() => {
+        if (email.trim()) {
+            navigate("/signup", { state: { email } })
         } else {
+            toast.dismiss(); // remove previous toast
             toast.error("Please Enter your email")
         }
-    }
+    }, [email, navigate]);
 
+    // ✅ optimized input handler
+    const handleChange = useCallback((e) => {
+        setEmail(e.target.value);
+    }, []);
 
     return (
-        <>
-            <div className='max-w-screen-2xl container mx-auto px-4 sm:px-6 md:px-12 lg:px-20 flex flex-col md:flex-row items-center md:items-start dark:bg-slate-900 dark:text-white text-gray-800'>
+        <div className='max-w-screen-2xl container mx-auto px-4 sm:px-6 md:px-12 lg:px-20 flex flex-col md:flex-row items-center md:items-start dark:bg-slate-900 dark:text-white text-gray-800'>
 
-                {/* Text Section */}
-                <div className='w-full md:w-1/2 order-2 md:order-1 mt-10 md:mt-32 text-center md:text-left'>
-                    <div className='space-y-6 md:space-y-12'>
+            {/* Text Section */}
+            <div className='w-full md:w-1/2 order-2 md:order-1 mt-10 md:mt-32 text-center md:text-left'>
+                <div className='space-y-6 md:space-y-12'>
 
-                        <div className=' hidden md:block w-full'>
-                            {authUser && <WelcomeTyping part1="Welcome back" part2={`${authUser.name} 👋`} />}
+                    {/* ✅ conditional render optimized */}
+                    {authUser && (
+                        <div className='hidden md:block w-full'>
+                            <WelcomeTyping part1="Welcome back" part2={`${authUser.name} 👋`} />
                         </div>
+                    )}
 
-                        <h1 className='text-2xl sm:text-3xl md:text-4xl font-bold leading-snug'>
-                            <WelcomeTyping
-                                part1="Hello, Welcome here to learn something "
-                                part2="new everyday"
+                    <h1 className='text-2xl sm:text-3xl md:text-4xl font-bold leading-snug'>
+                        <WelcomeTyping
+                            part1="Hello, Welcome here to learn something "
+                            part2="new everyday"
+                        />
+                    </h1>
+
+                    <p className='text-sm sm:text-base md:text-lg'>
+                        Step into a universe where every page unlocks a new world, every story shapes a new perspective, and every book becomes a journey you’ll never forget.
+                    </p>
+
+                    {/* Input */}
+                    <div>
+                        <label className="input bg-white dark:bg-slate-900 dark:text-white border w-full border-gray-400 flex items-center gap-2 px-3 py-2 rounded-md">
+
+                            <input
+                                type="email"
+                                className="grow outline-none text-sm sm:text-base"
+                                placeholder="Email"
+                                value={email}
+                                onChange={handleChange}
                             />
-                        </h1>
-
-                        <p className='text-sm sm:text-base md:text-lg'>
-                            Step into a universe where every page unlocks a new world, every story shapes a new perspective, and every book becomes a journey you’ll never forget.
-                        </p>
-
-                        <div>
-                            <label className="input bg-white dark:bg-slate-900 dark:text-white border w-full border-gray-400 flex items-center gap-2 px-3 py-2 rounded-md">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 16 16"
-                                    fill="currentColor"
-                                    className="h-4 w-4 opacity-70">
-                                    <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
-                                    <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
-                                </svg>
-                                <input
-                                    type="email"
-                                    className="grow outline-none text-sm sm:text-base"
-                                    placeholder="Email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </label>
-                        </div>
+                        </label>
                     </div>
-
-                    <button onClick={handleClick} className="w-full sm:w-auto px-6 mt-6 py-2 bg-pink-500 text-white rounded-md hover:bg-purple-700 transition duration-200">
-                        Get Started
-                    </button>
-
                 </div>
 
-                {/* Image Section */}
-                <div className='w-full md:w-1/2 order-1 md:order-2 mt-6 md:mt-0 flex justify-center'>
-                    <img
-                        src={banner}
-                        alt="banner"
-                        className='w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-full h-auto object-contain rounded-md'
-                    />
-                </div>
+                <button
+                    onClick={handleClick}
+                    className="w-full sm:w-auto px-6 mt-6 py-2 bg-pink-500 text-white rounded-md hover:bg-purple-700 transition duration-200"
+                >
+                    Get Started
+                </button>
+
             </div>
 
-            <br />
-            <br />
-        </>
+            {/* Image Section */}
+            <div className='w-full md:w-1/2 order-1 md:order-2 mt-6 md:mt-0 flex justify-center'>
+                <img
+                    src={banner}
+                    alt="banner"
+                    loading="lazy"   // ✅ lazy load
+                    className='w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-full h-auto object-contain rounded-md'
+                />
+            </div>
+
+        </div>
     )
 }
 
-export default Banner;
+export default React.memo(Banner);

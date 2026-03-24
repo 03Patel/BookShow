@@ -1,46 +1,74 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import API from '../api'
 import toast from 'react-hot-toast'
+import { useAuth } from '../redux/AuthReducer'
 
 function Login({ onClose }) {
+
     const navigate = useNavigate()
+    const [authUser, setAuthUser] = useAuth()
+
     const [showPassword, setShowPassword] = useState(false)
+    const [loading, setLoading] = useState(false)
+
     const [form, setForm] = useState({
         email: "",
         password: "",
     })
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value })
-    }
+    // ✅ optimized change handler
+    const handleChange = useCallback((e) => {
+        const { name, value } = e.target
+        setForm(prev => ({ ...prev, [name]: value }))
+    }, [])
 
-    const handleSubmit = async (e) => {
+    // ✅ toggle handler
+    const togglePassword = useCallback(() => {
+        setShowPassword(prev => !prev)
+    }, [])
+
+    // ✅ submit handler
+    const handleSubmit = useCallback(async (e) => {
         e.preventDefault()
+
+        if (loading) return
+        setLoading(true)
+
         try {
             const res = await API.post("/auth/login", form)
+
+            // ✅ store user
             localStorage.setItem("user", JSON.stringify(res.data.user))
 
-            // Close modal via callback if provided
+            // ✅ update global auth state
+            setAuthUser(res.data.user)
+
+            toast.dismiss()
+            toast.success("Login successful")
+
             if (onClose) onClose()
-            toast.success("Login successfull")
-            navigate("/")
-            window.location.reload()
+
+            navigate("/") // ❌ no reload needed
+
         } catch (error) {
-            toast.error(error.response?.data?.message || "Login failed")
+            toast.error(error?.response?.data?.message || "Login failed")
+        } finally {
+            setLoading(false)
         }
-    }
+
+    }, [form, navigate, onClose, setAuthUser, loading])
 
     return (
-        <div className="dark:bg-slate-900 dark:text-white bg-white">
-            {/* Modal */}
+        <div className="dark:bg-slate-900 text-gray-800 dark:text-white bg-white">
+
             <dialog className="modal" open>
                 <form
                     onSubmit={handleSubmit}
                     className="modal-box w-full max-w-md mx-auto bg-white dark:bg-slate-900 dark:text-white rounded-xl p-6 relative"
                 >
-                    {/* Close Button */}
+
                     <Link
                         type="button"
                         onClick={onClose}
@@ -85,7 +113,7 @@ function Login({ onClose }) {
                             />
                             <button
                                 type="button"
-                                onClick={() => setShowPassword(!showPassword)}
+                                onClick={togglePassword}
                                 className="absolute right-3 top-3 text-gray-500"
                             >
                                 {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
@@ -95,11 +123,13 @@ function Login({ onClose }) {
 
                     {/* Actions */}
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-6">
+
                         <button
                             type="submit"
-                            className="w-full sm:w-auto bg-pink-500 text-white rounded-md px-4 py-2 hover:bg-pink-600 transition"
+                            disabled={loading}
+                            className="w-full sm:w-auto bg-pink-500 text-white rounded-md px-4 py-2 hover:bg-pink-600 transition disabled:opacity-50"
                         >
-                            Login
+                            {loading ? "Logging in..." : "Login"}
                         </button>
 
                         <p className="text-sm text-center sm:text-left">
@@ -113,10 +143,11 @@ function Login({ onClose }) {
                             </Link>
                         </p>
                     </div>
+
                 </form>
             </dialog>
         </div>
     )
 }
 
-export default Login
+export default React.memo(Login)
