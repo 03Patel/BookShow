@@ -15,12 +15,19 @@ router.get("/", async (req, res) => {
     }
 })
 
-router.get("/products", async (req, res) => {
+router.get("/user/:id", async (req, res) => {
     try {
-        const products = await Product.find()
-        res.status(200).json(products)
-    } catch (erorr) {
-        res.status(500).json({ message: "server error" })
+        const { id } = req.params
+
+        const product = await Book.findById(id);
+        if (product) {
+            res.status(200).json(product);
+        }
+        else {
+            res.status(404).json({ message: "Product was not found" })
+        }
+    } catch (error) {
+        res.status(500).json({ message: "server error" });
     }
 })
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import API from '../api'
+import toast from 'react-hot-toast'
 
 function Login({ onClose }) {
     const navigate = useNavigate()
@@ -23,11 +24,11 @@ function Login({ onClose }) {
 
             // Close modal via callback if provided
             if (onClose) onClose()
-
+            toast.success("Login successfull")
             navigate("/")
             window.location.reload()
         } catch (error) {
-            alert(error.response?.data?.message || "Login failed")
+            toast.error(error.response?.data?.message || "Login failed")
         }
     }
 
@@ -40,13 +41,14 @@ function Login({ onClose }) {
                     className="modal-box w-full max-w-md mx-auto bg-white dark:bg-slate-900 dark:text-white rounded-xl p-6 relative"
                 >
                     {/* Close Button */}
-                    <button
+                    <Link
                         type="button"
                         onClick={onClose}
+                        to="/"
                         className="btn btn-sm btn-circle btn-ghost absolute right-3 top-3"
                     >
                         ✕
-                    </button>
+                    </Link>
 
                     <h3 className="font-bold text-2xl text-center">Login</h3>
 

@@ -2,48 +2,47 @@ import React, { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import API from '../api';
+import Login from './Login'; // import your Login component
+import toast from 'react-hot-toast';
 
 function Signup() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
-    const [modalVisible, setModalVisible] = useState(false);
+    const [showLogin, setShowLogin] = useState(false); // show/hide login modal
     const [form, setForm] = useState({
         name: "",
         email: "",
         password: "",
         confirmPassword: ""
     });
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
+
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
-        setError(""); // clear error on input change
+
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
-        setSuccess("");
+
 
         if (form.password !== form.confirmPassword) {
-            setError("Passwords do not match");
+            toast.error("Passwords do not match");
             return;
         }
 
         if (form.password.length < 6) {
-            setError("Password must be at least 6 characters");
+            toast.error("Password must be at least 6 characters");
             return;
         }
 
         try {
             const res = await API.post("/auth/signup", form);
             localStorage.setItem("user", JSON.stringify(res.data.user));
-            setSuccess(res.data.message);
-            setModalVisible(true); // show modal
+            //  setSuccess(res.data.message);
+            toast.success("User create successfull")
         } catch (err) {
-            console.log(err);
-            setError(err.response?.data?.message || "Signup failed");
+            toast.error(err.response?.data?.message || "Signup failed");
         }
     };
 
@@ -51,9 +50,7 @@ function Signup() {
         <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-900 dark:text-white px-4 text-gray-800">
             <div className="w-full max-w-md bg-white dark:bg-slate-800 shadow-xl rounded-2xl p-6">
 
-                <h2 className="text-3xl font-bold text-center mb-6">
-                    Create Account
-                </h2>
+                <h2 className="text-3xl font-bold text-center mb-6">Create Account</h2>
 
                 {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
                 {success && <p className="text-green-500 text-sm mb-2">{success}</p>}
@@ -111,8 +108,8 @@ function Signup() {
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                aria-label={showPassword ? "Hide password" : "Show password"}
                                 className="absolute right-3 top-2 text-gray-500"
+                                aria-label={showPassword ? "Hide password" : "Show password"}
                             >
                                 {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                             </button>
@@ -136,8 +133,8 @@ function Signup() {
                             <button
                                 type="button"
                                 onClick={() => setShowConfirm(!showConfirm)}
-                                aria-label={showConfirm ? "Hide password" : "Show password"}
                                 className="absolute right-3 top-2 text-gray-500"
+                                aria-label={showConfirm ? "Hide password" : "Show password"}
                             >
                                 {showConfirm ? <Eye size={18} /> : <EyeOff size={18} />}
                             </button>
@@ -154,25 +151,21 @@ function Signup() {
 
                 </form>
 
-                {/* Redirect */}
+                {/* Redirect to login */}
                 <p className="text-center mt-4 text-sm">
                     Already have an account?{" "}
-                    <Link
-                        onClick={() => setModalVisible(true)}
+                    <span
+                        onClick={() => setShowLogin(true)}
                         className="text-blue-500 underline cursor-pointer"
                     >
                         Login
-                    </Link>
+                    </span>
                 </p>
 
-                {/* Modal (optional example) */}
-                {modalVisible && (
-                    <dialog id="my_modal_3" className="rounded-lg p-6">
-                        <p>Modal content here...</p>
-                        <button onClick={() => setModalVisible(false)}>Close</button>
-                    </dialog>
-                )}
             </div>
+
+            {/* Render Login Modal */}
+            {showLogin && <Login onClose={() => setShowLogin(false)} />}
         </div>
     )
 }

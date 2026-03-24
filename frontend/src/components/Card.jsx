@@ -1,6 +1,22 @@
 import React from 'react'
+import { useAuth } from '../redux/AuthReducer';
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
+import BookReceipt from './BookRec';
 
 function Card({ item }) {
+
+    const navigate = useNavigate();
+
+    const handleBuy = () => {
+
+        navigate(`/Details/${item._id}`, {
+            state: {
+                isFree: item.free
+            }
+        });
+    };
+
     return (
         <div className='mt-6 sm:mt-10 px-2 sm:px-3'>
 
@@ -41,10 +57,7 @@ function Card({ item }) {
                         <span className="border dark:bg-slate-900 dark:text-white text-gray-700 text-xs sm:text-sm px-3 py-1 rounded-md font-medium">
                             $ {item.price}
                         </span>
-
-                        <button className="text-xs sm:text-sm px-3 py-1 rounded-full border-2 border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white transition duration-300">
-                            Buy Now
-                        </button>
+                        <button onClick={handleBuy} className="text-xs sm:text-sm px-3 py-1 rounded-full border-2 border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white transition duration-300">Buy Now</button>
                     </div>
 
                 </div>

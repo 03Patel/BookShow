@@ -5,26 +5,25 @@ import { Link } from 'react-router-dom'
 import API from '../api'
 import { useAuth } from '../redux/AuthReducer'
 import WelcomeTyping from './Welcome'
+import toast from 'react-hot-toast'
 
 function Course() {
     const [products, setProducts] = useState([])
     const [page, setPage] = useState(1)
-    const [loading, setLoading] = useState(false)
+
     const [hasMore, setHasMore] = useState(true)
     const [authUser] = useAuth()
     const limit = 12 // items per fetch
 
     const getProducts = useCallback(async () => {
         if (!hasMore) return
-        setLoading(true)
+
         try {
             const res = await API.get(`/products?page=${page}&limit=${limit}`)
             if (res.data.length < limit) setHasMore(false)
             setProducts(prev => [...prev, ...res.data])
         } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
+            toast.error(error)
         }
     }, [page, hasMore])
 
@@ -35,14 +34,14 @@ function Course() {
     // Infinite scroll handler
     useEffect(() => {
         const handleScroll = () => {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !loading && hasMore) {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && hasMore) {
                 setPage(prev => prev + 1)
             }
         }
 
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
-    }, [loading, hasMore])
+    }, [hasMore])
 
     return (
         <div className='max-w-screen-2xl bg-white dark:bg-slate-900 dark:text-white min-h-screen container mx-auto md:px-20 px-4'>
@@ -74,13 +73,7 @@ function Course() {
                         <GuestCTA />
                     )}
 
-                    {loading && (
-                        <p className="text-gray-500 mt-6 text-center">Loading more products...</p>
-                    )}
 
-                    {!hasMore && products.length > 0 && (
-                        <p className="text-gray-500 mt-6 text-center">No more products</p>
-                    )}
                 </div>
             </div>
 

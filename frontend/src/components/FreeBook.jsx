@@ -4,10 +4,14 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
 import Card from './Card';
 import API from '../api';
+import { useActionData } from 'react-router-dom';
+import { useAuth } from '../redux/AuthReducer';
+import toast from 'react-hot-toast';
 
 function FreeBook() {
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [book, setBook] = useState([]);
+    const [authUser, setAuthUser] = useAuth();
     const [loading, setLoading] = useState(true); // loading state
 
     // Update screen width
@@ -24,7 +28,7 @@ function FreeBook() {
                 const res = await API.get("/book");
                 setBook(res.data);
             } catch (error) {
-                console.error(error);
+                toast.error(error);
             } finally {
                 setLoading(false); // stop loading after fetch
             }
