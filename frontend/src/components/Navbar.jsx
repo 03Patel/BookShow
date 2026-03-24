@@ -81,43 +81,41 @@ function Navbar() {
                 </div>
 
                 {/* CENTER */}
-                <div className="navbar-center hidden lg:flex">
-                    <ul className="menu menu-horizontal px-1">
-                        {items}
-                    </ul>
+                <div className='navbar-end'>
+                    <div className="navbar-end hidden lg:flex">
+                        <ul className="menu menu-horizontal px-1">
+                            {items}
+                        </ul>
+                    </div>
+
+                    {/* RIGHT */}
+                    <div className='items-center gap-2 sm:gap-3'>
+                        {/* Auth */}
+                        {authUser ? (
+                            <button
+                                onClick={handleLogout}
+                                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                            >
+                                Logout
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => setModalVisible(true)}
+                                className="btn btn-sm sm:btn-md"
+                            >
+                                Login
+                            </button>
+                        )}
+
+                    </div>
                 </div>
 
-                {/* RIGHT */}
-                <div className='navbar-end items-center gap-2 sm:gap-3'>
+                {/* ✅ Modal outside main render */}
+                {modalVisible && (
+                    <Login onClose={() => setModalVisible(false)} />
+                )}
 
-                    {/* Theme */}
-
-
-                    {/* Auth */}
-                    {authUser ? (
-                        <button
-                            onClick={handleLogout}
-                            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
-                        >
-                            Logout
-                        </button>
-                    ) : (
-                        <button
-                            onClick={() => setModalVisible(true)}
-                            className="btn btn-sm sm:btn-md"
-                        >
-                            Login
-                        </button>
-                    )}
-
-                </div>
             </div>
-
-            {/* ✅ Modal outside main render */}
-            {modalVisible && (
-                <Login onClose={() => setModalVisible(false)} />
-            )}
-
         </div>
     )
 }
