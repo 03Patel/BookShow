@@ -64,9 +64,9 @@ function BookDetails() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 py-10 px-4 dark:bg-gray-900 dark:text-white flex justify-center">
+        <div className="min-h-screen dark:bg-slate-900 dark:text-white bg-gray-100 py-10 px-4 dark:bg-gray-900 dark:text-white flex justify-center">
 
-            <div className="w-full max-w-5xl mt-30 text-gray-800  bg-white border rounded-xl shadow-sm overflow-hidden">
+            <div className="w-full max-w-5xl mt-30  text-gray-800  bg-white border rounded-xl shadow-sm overflow-hidden">
 
                 <div className="grid grid-cols-1 md:grid-cols-2">
 

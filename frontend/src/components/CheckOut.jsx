@@ -77,15 +77,17 @@ function Checkout() {
         )
     }
 
-    return (
-        <div className="min-h-screen text-gray-800 bg-gray-100 py-10 px-4 flex justify-center">
+    const amount = book.price + 100;
 
-            <div className="w-full mt-20 max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6">
+    return (
+        <div className="min-h-screen dark:bg-slate-900 dark:text-white text-gray-800 bg-gray-100 py-10 px-4 flex justify-center">
+
+            <div className="w-full mt-20 dark:bg-slate-900 dark:text-white max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6">
 
                 {/* LEFT - FORM */}
                 <form
                     onSubmit={handleSubmit}
-                    className="bg-white p-6 rounded-lg shadow-sm border space-y-4"
+                    className="bg-white p-6 rounded-lg dark:bg-slate-900 dark:text-white shadow-sm border space-y-4"
                 >
                     <h2 className="text-xl font-semibold mb-2">Checkout</h2>
 
@@ -132,14 +134,14 @@ function Checkout() {
                     </button>
                     <Link
                         to={`/Details/${id}`}
-                        className="text-sm text-gray-600 ml-30 hover:text-black"
+                        className="text-sm text-gray-600 ml-30 md:ml-50 hover:text-black"
                     >
                         ← Back
                     </Link>
                 </form>
 
                 {/* RIGHT - ORDER SUMMARY */}
-                <div className="bg-white p-6 rounded-lg shadow-sm border">
+                <div className="bg-white p-6 dark:bg-slate-900 dark:text-white rounded-lg shadow-sm border">
 
                     <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
 
@@ -153,6 +155,9 @@ function Checkout() {
                         <div>
                             <p className="font-medium">{book.name}</p>
                             <p className="text-sm text-gray-500">{book.category}</p>
+
+
+
                             <p className="text-lg font-semibold mt-2">
                                 ${book.price}
                             </p>

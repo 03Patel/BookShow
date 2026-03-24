@@ -9,7 +9,7 @@ function Home() {
         <div className='h-full w-full bg-white dark:bg-slate-900 dark:text-white'>
             <Banner />
             <FreeBook />
-
+            <br /><br />
             <Footer />
 
         </div>

@@ -17,7 +17,7 @@ function BookReceipt() {
         const getBook = async () => {
             try {
                 let res;
-                console.log(isFree)
+
                 if (!authUser) {
                     res = await API.get(`/book/user/${id}`)
                 } else {
@@ -40,7 +40,7 @@ function BookReceipt() {
 
 
     return (
-        <div className="min-h-screen  text-gray-800 bg-gray-100 flex justify-center items-start py-10 px-4">
+        <div className="min-h-screen  text-gray-800 dark:bg-slate-900 dark:text-white bg-gray-100 flex justify-center items-start py-10 px-4">
 
             <div className="w-full max-w-xl bg-white mt-40 border rounded-lg shadow-sm">
 

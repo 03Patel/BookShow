@@ -1,14 +1,18 @@
 import React, { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import API from '../api';
 import Login from './Login'; // import your Login component
 import toast from 'react-hot-toast';
 
 function Signup() {
+    const location = useLocation();
+    const emailFromHome = location.state?.email || "";
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
-    const [showLogin, setShowLogin] = useState(false); // show/hide login modal
+    const [showLogin, setShowLogin] = useState(false);
+    const [email, setEmail] = useState(emailFromHome);
+    // show/hide login modal
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -51,10 +55,6 @@ function Signup() {
             <div className="w-full max-w-md bg-white dark:bg-slate-800 shadow-xl rounded-2xl p-6">
 
                 <h2 className="text-3xl font-bold text-center mb-6">Create Account</h2>
-
-                {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-                {success && <p className="text-green-500 text-sm mb-2">{success}</p>}
-
                 <form onSubmit={handleSubmit} className="space-y-5">
 
                     {/* Name */}
@@ -82,8 +82,8 @@ function Signup() {
                             <input
                                 type="email"
                                 name="email"
-                                value={form.email}
-                                onChange={handleChange}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter your email"
                                 className="w-full pl-10 py-2 border rounded-md outline-none"
                                 required

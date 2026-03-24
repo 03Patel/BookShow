@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 export default function WelcomeTyping({ part1 = "", part2 = "", speed = 100, pause = 2000 }) {
     const [index, setIndex] = useState(0);
 
+
     // Combine parts once
     const fullText = useMemo(() => part1 + part2, [part1, part2]);
 
@@ -24,10 +25,10 @@ export default function WelcomeTyping({ part1 = "", part2 = "", speed = 100, pau
     const typedPart2 = fullText.slice(part1.length, index);
 
     return (
-        <h2 className="text-2xl md:text-3xl font-semibold">
+        <h2 className="text-2xl gap-4 md:text-3xl font-semibold">
             <span>{typedPart1}</span>
-            <br />
-            <span className="text-pink-500">{typedPart2}</span>
+
+            <span className="text-pink-500 ml-5">{typedPart2}</span>
         </h2>
     );
 }

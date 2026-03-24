@@ -1,11 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import banner from "../../public/banner.png"
 import { useAuth } from '../redux/AuthReducer'
 import WelcomeTyping from './Welcome';
-import { Link } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
+import toast from 'react-hot-toast';
 
 function Banner() {
     const [authUser, setAuthUser] = useAuth();
+    const [email, setEmail] = useState("");
+    const navigator = useNavigate()
+
+    const handleClick = () => {
+        if (email) {
+            navigator("/signup", { state: { email } })
+        } else {
+            toast.error("Please Enter your email")
+        }
+    }
+
+
     return (
         <>
             <div className='max-w-screen-2xl container mx-auto px-4 sm:px-6 md:px-12 lg:px-20 flex flex-col md:flex-row items-center md:items-start dark:bg-slate-900 dark:text-white text-gray-800'>
@@ -14,7 +27,9 @@ function Banner() {
                 <div className='w-full md:w-1/2 order-2 md:order-1 mt-10 md:mt-32 text-center md:text-left'>
                     <div className='space-y-6 md:space-y-12'>
 
-                        {authUser && <WelcomeTyping textMessage={`Welcome back, ${authUser.name} 👋`} />}
+                        <div className=' hidden md:block w-full'>
+                            {authUser && <WelcomeTyping part1="Welcome back" part2={`${authUser.name} 👋`} />}
+                        </div>
 
                         <h1 className='text-2xl sm:text-3xl md:text-4xl font-bold leading-snug'>
                             <WelcomeTyping
@@ -38,19 +53,20 @@ function Banner() {
                                     <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
                                 </svg>
                                 <input
-                                    type="text"
+                                    type="email"
                                     className="grow outline-none text-sm sm:text-base"
                                     placeholder="Email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </label>
                         </div>
                     </div>
 
-                    <Link to="signup">
-                        <button className="w-full sm:w-auto px-6 mt-6 py-2 bg-pink-500 text-white rounded-md hover:bg-purple-700 transition duration-200">
-                            Get Started
-                        </button>
-                    </Link>
+                    <button onClick={handleClick} className="w-full sm:w-auto px-6 mt-6 py-2 bg-pink-500 text-white rounded-md hover:bg-purple-700 transition duration-200">
+                        Get Started
+                    </button>
+
                 </div>
 
                 {/* Image Section */}
