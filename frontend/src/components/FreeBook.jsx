@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
@@ -6,9 +6,9 @@ import Card from './Card';
 import API from '../api';
 
 function FreeBook() {
-
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [book, setBook] = useState([]);
+    const [loading, setLoading] = useState(true); // loading state
 
     // Update screen width
     useEffect(() => {
@@ -17,7 +17,7 @@ function FreeBook() {
         return () => window.removeEventListener("resize", updateWidth);
     }, []);
 
-    // Fetch books only once on mount
+    // Fetch books
     useEffect(() => {
         const getBook = async () => {
             try {
@@ -25,10 +25,12 @@ function FreeBook() {
                 setBook(res.data);
             } catch (error) {
                 console.error(error);
+            } finally {
+                setLoading(false); // stop loading after fetch
             }
         };
         getBook();
-    }, []); // empty dependency array = run once
+    }, []);
 
     // Slider settings
     const settings = {
@@ -51,13 +53,22 @@ function FreeBook() {
                 </p>
             </div>
 
-            <Slider {...settings}>
-                {book.map((item) => (
-                    <Card item={item} key={item.id} />
-                ))}
-            </Slider>
+            {loading ? (
+                // Loading skeleton
+                <div className="flex gap-4 overflow-x-auto py-4">
+                    {[...Array(screenWidth < 768 ? 1 : 3)].map((_, i) => (
+                        <div key={i} className="w-60 h-72 bg-gray-300 rounded-lg animate-pulse" />
+                    ))}
+                </div>
+            ) : (
+                <Slider {...settings}>
+                    {book.map((item) => (
+                        <Card item={item} key={item.id} />
+                    ))}
+                </Slider>
+            )}
         </div>
-    )
+    );
 }
 
 export default FreeBook;
