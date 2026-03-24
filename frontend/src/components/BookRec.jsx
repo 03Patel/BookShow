@@ -106,7 +106,7 @@ function BookReceipt() {
 
                 {/* Footer */}
                 <div className="border-t px-6 py-4 flex justify-between gap-3">
-                    <Link to={`/checkout/${id}`} className="text-sm text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white">
+                    <Link to="/" className="text-sm text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white">
                         ← Back
                     </Link>
                     <button onClick={() => window.print()} className="text-sm px-4 py-1.5 border rounded hover:bg-gray-100 dark:hover:bg-gray-700">
