@@ -2,6 +2,7 @@ import React from 'react'
 import banner from "../../public/banner.png"
 import { useAuth } from '../redux/AuthReducer'
 import WelcomeTyping from './Welcome';
+import { Link } from "react-router-dom"
 
 function Banner() {
     const [authUser, setAuthUser] = useAuth();
