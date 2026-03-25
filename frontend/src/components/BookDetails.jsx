@@ -8,17 +8,18 @@ function BookDetails() {
     const { id } = useParams()
     const navigate = useNavigate()
     const location = useLocation()
-    const { isFree } = location.state || {}
+
 
     const [book, setBook] = useState(null)
     const [loading, setLoading] = useState(true)
-    const [authUser] = useAuth()
+    const { authUser, isFree } = useAuth()
 
     useEffect(() => {
         const getBook = async () => {
             try {
+
                 setLoading(true)
-                const endpoint = authUser ? `/products/user/${id}` : `/book/user/${id}`
+                const endpoint = isFree ? `/book/user/${id}` : `/products/user/${id}`
                 const res = await API.get(endpoint)
                 setBook(res.data)
             } catch (error) {
@@ -110,7 +111,7 @@ function BookDetails() {
                             </button>
 
                             <Link
-                                to={authUser ? "/course" : "/"}
+                                to={!isFree ? "/course" : "/"}
                                 className="w-full sm:w-auto px-6 py-2 border rounded-md text-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition"
                             >
                                 Back

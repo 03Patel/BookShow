@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import API from '../api';
 import Login from './Login';
 import toast from 'react-hot-toast';
@@ -10,7 +10,7 @@ function Signup() {
 
     const location = useLocation();
     const navigate = useNavigate();
-    const [, setAuthUser] = useAuth();
+    const { authUser, setAuthUser } = useAuth();
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
@@ -86,7 +86,8 @@ function Signup() {
 
                 <h2 className="text-3xl font-bold text-center mb-6">Create Account</h2>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-5 relative">
+
 
                     {/* Name */}
                     <div>

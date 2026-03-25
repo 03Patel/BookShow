@@ -8,11 +8,11 @@ function Checkout() {
     const { id } = useParams()
     const navigate = useNavigate()
     const location = useLocation()
-    const { isFree } = location.state || {}
+
 
     const [book, setBook] = useState(null)
     const [loading, setLoading] = useState(true)
-    const [authUser] = useAuth()
+    const { authUser, isFree } = useAuth()
 
     const [form, setForm] = useState({
         name: authUser?.name || "",
@@ -25,7 +25,7 @@ function Checkout() {
         const fetchBook = async () => {
             try {
                 setLoading(true)
-                const endpoint = authUser ? `/products/user/${id}` : `/book/user/${id}`
+                const endpoint = !isFree ? `/products/user/${id}` : `/book/user/${id}`
                 const res = await API.get(endpoint)
                 setBook(res.data)
             } catch (error) {

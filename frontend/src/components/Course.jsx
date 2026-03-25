@@ -12,16 +12,20 @@ function Course() {
     const [page, setPage] = useState(1)
 
     const [hasMore, setHasMore] = useState(true)
-    const [authUser] = useAuth()
+    const { authUser } = useAuth()
+
     const limit = 12 // items per fetch
 
     const getProducts = useCallback(async () => {
         if (!hasMore) return
 
         try {
+
             const res = await API.get(`/products?page=${page}&limit=${limit}`)
             if (res.data.length < limit) setHasMore(false)
             setProducts(prev => [...prev, ...res.data])
+
+
         } catch (error) {
             toast.error(error)
         }

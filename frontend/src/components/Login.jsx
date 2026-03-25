@@ -8,7 +8,7 @@ import { useAuth } from '../redux/AuthReducer'
 function Login({ onClose }) {
 
     const navigate = useNavigate()
-    const [authUser, setAuthUser] = useAuth()
+    const { authUser, setAuthUser } = useAuth()
 
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false)

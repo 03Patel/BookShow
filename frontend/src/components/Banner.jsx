@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 import toast from 'react-hot-toast';
 
 function Banner() {
-    const [authUser] = useAuth();
+    const { authUser } = useAuth();
     const [email, setEmail] = useState("");
     const navigate = useNavigate();
 

@@ -7,17 +7,17 @@ import { useAuth } from '../redux/AuthReducer'
 function BookReceipt() {
     const { id } = useParams()
     const location = useLocation()
-    const { payment = {}, userDetails = {}, isFree } = location.state || {}
+    const { payment = {}, userDetails = {} } = location.state || {}
 
     const [book, setBook] = useState(null)
     const [loading, setLoading] = useState(true)
-    const [authUser] = useAuth()
+    const { authUser, isFree } = useAuth()
 
     useEffect(() => {
         const getBook = async () => {
             try {
                 setLoading(true)
-                const endpoint = authUser ? `/products/user/${id}` : `/book/user/${id}`
+                const endpoint = !isFree ? `/products/user/${id}` : `/book/user/${id}`
                 const res = await API.get(endpoint)
                 setBook(res.data)
             } catch (error) {
@@ -107,7 +107,7 @@ function BookReceipt() {
                 {/* Footer */}
                 <div className="border-t px-6 py-4 flex justify-between gap-3">
                     <Link to="/" className="text-sm text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white">
-                        ← Back
+                        Home
                     </Link>
                     <button onClick={() => window.print()} className="text-sm px-4 py-1.5 border rounded hover:bg-gray-100 dark:hover:bg-gray-700">
                         Print

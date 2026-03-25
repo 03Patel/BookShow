@@ -1,7 +1,10 @@
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../redux/AuthReducer';
+
 
 function Card({ item }) {
+    const { isFree, setIsFree } = useAuth()
 
     const navigate = useNavigate();
 
@@ -9,9 +12,10 @@ function Card({ item }) {
     const handleBuy = useCallback(() => {
         navigate(`/Details/${item._id}`, {
             state: {
-                isFree: item.free
+                state: item.free
             }
         });
+        setIsFree(item.free)
     }, [navigate, item]);
 
     // ✅ memoized badge class

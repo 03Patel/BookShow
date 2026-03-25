@@ -6,7 +6,7 @@ import { useAuth } from '../redux/AuthReducer'
 function Navbar() {
 
     const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light")
-    const [authUser, setAuthUser] = useAuth()
+    const { authUser, setAuthUser } = useAuth();
     const [sticky, setSticky] = useState(false)
     const [modalVisible, setModalVisible] = useState(false)
     const navigate = useNavigate()
